@@ -1,30 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { format, parseISO } from "date-fns";
-import { Alert } from "./shared/alert";
-import { Document } from "./shared/document";
+import { AlertUtil } from "./utils/alert-util";
+import { DocumentUtil } from "./utils/document-util";
 import InputMask from "react-input-mask";
-
-interface ApiFederalUnit {
-  nome: string;
-  sigla: string;
-}
-
-interface ApiCity {
-  id: number;
-  nome: string;
-}
-
-interface FederalUnit {
-  initials: string;
-  name: string;
-}
-
-interface City {
-  id: number;
-  name: string;
-}
+import { FederalUnit, getFederalUnits } from "./services/get-federal-units";
+import { City, getCities } from "./services/get-cities";
+import { DateUtil } from "./utils/date-util";
 
 interface User {
   id: string;
@@ -46,44 +27,23 @@ export default function App() {
   const [cities, setCities] = useState<City[]>([]);
   const [users, setUsers] = useState<User[]>([]);
 
-  async function getFederalUnits(): Promise<void> {
-    const { data } = await axios.get<ApiFederalUnit[]>(
-      "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
-    );
-
-    const federalUnitsData = data.map((federalUnit) => ({
-      initials: federalUnit.sigla,
-      name: federalUnit.nome,
-    }));
-
-    setFederalUnits(federalUnitsData);
-  }
-
-  async function getCities(): Promise<void> {
-    const { data } = await axios.get<ApiCity[]>(
-      `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${federalUnit}/municipios`
-    );
-
-    const citiesData = data.map((city) => ({
-      id: city.id,
-      name: city.nome,
-    }));
-
-    setCities(citiesData);
-  }
-
   async function handleSubmit(event: FormEvent): Promise<void> {
     event.preventDefault();
 
-    const age = calculateAge(birthday);
+    const age = DateUtil.calculateAge(birthday);
 
-    if (age < 16) {
-      Alert.toastError("Idade mínima exigida 16 anos");
+    if (name.split(" ").length < 2) {
+      AlertUtil.toastError("Nome e sobrenome é exigido");
       return;
     }
 
-    if (!Document.validCpf(document)) {
-      Alert.toastError("CPF incorreto");
+    if (age < 16) {
+      AlertUtil.toastError("Idade mínima exigida 16 anos");
+      return;
+    }
+
+    if (!DocumentUtil.validCpf(document)) {
+      AlertUtil.toastError("CPF incorreto");
       return;
     }
 
@@ -100,11 +60,13 @@ export default function App() {
     };
 
     setUsers([...users, user]);
-    Alert.toastSuccess("Usuário adicionado com sucesso");
+    AlertUtil.toastSuccess("Usuário adicionado com sucesso");
   }
 
   async function handleDeleteUser(id: string): Promise<void> {
-    const alertResult = await Alert.confirmMessage("Deseja realmente excluir?");
+    const alertResult = await AlertUtil.confirmMessage(
+      "Deseja realmente excluir?"
+    );
 
     if (!alertResult.isConfirmed) {
       return;
@@ -115,25 +77,12 @@ export default function App() {
     setUsers(usersFiltered);
   }
 
-  function calculateAge(date: string): number {
-    const today = new Date();
-    const birthDate = new Date(date);
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      return age - 1;
-    }
-
-    return age;
-  }
-
   useEffect(() => {
-    getFederalUnits();
+    getFederalUnits().then((federalUnits) => setFederalUnits(federalUnits));
   }, []);
 
   useEffect(() => {
-    getCities();
+    getCities(federalUnit).then((cities) => setCities(cities));
   }, [federalUnit]);
 
   return (
@@ -219,7 +168,7 @@ export default function App() {
         </thead>
         <tbody>
           {users.map((user) => {
-            const birthDayFormatted = format(parseISO(user.birthday), "d/MM/Y");
+            const birthDayFormatted = DateUtil.formatToBr(user.birthday);
 
             return (
               <tr key={user.id}>

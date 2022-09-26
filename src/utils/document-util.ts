@@ -1,6 +1,6 @@
-export class Document {
+export class DocumentUtil {
   static validCpf(cpf: string): boolean {
-    cpf = cpf.replace(/\D/g, '');
+    cpf = cpf.replace(/\D/g, "");
     let sum = 0;
     let rest, interactive;
 
@@ -8,7 +8,7 @@ export class Document {
       return false;
     }
 
-    if (cpf == '00000000000') {
+    if (cpf == "00000000000") {
       return false;
     }
 
@@ -39,8 +39,8 @@ export class Document {
   }
 
   static format(value: string): string {
-    const cpf = value.replace(/\D/g, '');
+    const cpf = value.replace(/\D/g, "");
 
-    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4');
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
   }
 }

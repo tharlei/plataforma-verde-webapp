@@ -1,6 +1,6 @@
 import Swal, { SweetAlertResult } from "sweetalert2";
 
-export class Alert {
+export class AlertUtil {
   static toastError(title: string): void {
     Swal.fire({
       title,
