@@ -15,7 +15,7 @@ export class DateUtil {
   }
 
   static formatToBr(date: string, hours = false) {
-    let template = "d/MM/Y";
+    let template = "dd/MM/Y";
     if (hours) {
       template += " HH:ii";
     }
