@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input,
+select,
+option {
+  @apply border mt-1 rounded text-gray-900 p-1 bg-white;
+}
+
+th {
+  @apply text-left uppercase bg-gray-600 text-sm lg:text-base p-2 lg:p-3 whitespace-nowrap border;
+}
+
+td {
+  @apply text-left bg-white text-sm lg:text-base p-2 lg:p-3 border whitespace-nowrap;
+}
