@@ -69,70 +69,82 @@ export function Form({ handleAddUser }: InputForm) {
   }, [federalUnit]);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Nome Completo*</label>
-        <input
-          type="text"
-          required
-          onChange={(event) => setName(event.target.value)}
-        />
-      </div>
-      <div>
-        <label>CPF*</label>
-        <InputMask
-          mask="999.999.999-99"
-          onChange={(event) => setDocument(event.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Data de Nascimento*</label>
-        <input
-          type="date"
-          required
-          onChange={(event) => setBirthday(event.target.value)}
-        />
-      </div>
-      <div>
-        <label>Estado*</label>
-        <select
-          defaultValue=""
-          required
-          onChange={(event) => setFederalUnit(event.target.value)}
-        >
-          <option value="" disabled>
-            Selecione
-          </option>
-          {federalUnits.map((federalUnitOption) => (
-            <option
-              value={federalUnitOption.initials}
-              key={federalUnitOption.initials}
-            >
-              {federalUnitOption.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>Cidade*</label>
-        <select
-          defaultValue=""
-          required
-          onChange={(event) => setCity(Number(event.target.value))}
-        >
-          <option value="" disabled>
-            Selecione
-          </option>
-          {cities.map((cityOption) => (
-            <option value={cityOption.id} key={cityOption.id}>
-              {cityOption.name}
-            </option>
-          ))}
-        </select>
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 lg:grild-cols-2 gap-4"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex flex-col">
+          <label>Nome Completo*</label>
+          <input
+            type="text"
+            required
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label>CPF*</label>
+          <InputMask
+            mask="999.999.999-99"
+            onChange={(event) => setDocument(event.target.value)}
+            required
+          />
+        </div>
+        <div className="flex flex-col">
+          <label>Data de Nascimento*</label>
+          <input
+            type="date"
+            required
+            onChange={(event) => setBirthday(event.target.value)}
+          />
+        </div>
       </div>
 
-      <button>Incluir</button>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex flex-col">
+          <label>Estado*</label>
+          <select
+            defaultValue=""
+            required
+            onChange={(event) => setFederalUnit(event.target.value)}
+          >
+            <option value="" disabled>
+              Selecione
+            </option>
+            {federalUnits.map((federalUnitOption) => (
+              <option
+                value={federalUnitOption.initials}
+                key={federalUnitOption.initials}
+              >
+                {federalUnitOption.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-col">
+          <label>Cidade*</label>
+          <select
+            defaultValue=""
+            required
+            onChange={(event) => setCity(Number(event.target.value))}
+          >
+            <option value="" disabled>
+              Selecione
+            </option>
+            {cities.map((cityOption) => (
+              <option value={cityOption.id} key={cityOption.id}>
+                {cityOption.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex lg:justify-end lg:items-end">
+          <button className="bg-green rounded px-20 py-1 h-8 text-white">
+            Incluir
+          </button>
+        </div>
+      </div>
     </form>
   );
 }
