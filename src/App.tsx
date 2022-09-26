@@ -188,7 +188,7 @@ export default function App() {
           <select
             defaultValue=""
             required
-            onChange={(event) => setCity(event.target.value)}
+            onChange={(event) => setCity(Number(event.target.value))}
           >
             <option value="" disabled>
               Selecione
